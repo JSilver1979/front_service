@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Система отчетности по входящим звонкам</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="index.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular-route.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.11/ngStorage.min.js"></script>
+</head>
+<body ng-app="reportApp" ng-controller="indexController">
+<div class="container" ng-show="!isAuthorized()">
+    <div class="login-form">
+        <img src="icons/logo.png" alt="Кадровый центр ДЗМ">
+        <h3>Система отчетности по входящим звонкам</h3>
+        <h5>Для работы с системой, пожалуйста, авторизуйтесь</h5>
+        <form ng-submit="authenticate()">
+            <label>
+                <input ng-model="user.username" type="text" placeholder="Имя пользователя">
+            </label><br>
+            <label>
+                <input ng-model="user.password" type="password" placeholder="Пароль">
+            </label><br>
+            <button type="submit" class="btn btn-outline-primary">Войти в систему</button>
+        </form>
+    </div>
+    <div ng-if="isAuthorized()">
+        <span>{{appUsername}}</span>
+        <button ng-click="logout()">Logout</button>
+    </div>
+</div>
+<div class="container view-container" ng-show="isAuthorized()">
+    <div>
+        <ul class="app-nav-list">
+            <li class="app-nav-item"><a href="#!/">Отчет за день</a></li>
+            <li class="app-nav-item"><a href="#!/stats">Статистика</a></li>
+            <li class="app-nav-item"><a href="#!/download">Выгрузка</a></li>
+            <li class="app-nav-item"><a href="#!/queue_admin">Очереди</a></li>
+            <li class="app-nav-item"><a href="#!/user_access">Доступ</a></li>
+            <li class="app-nav-item" style="float: right">
+                <button class="btn btn-primary logout" ng-click="logout()" style="">Выход</button>
+            </li>
+        </ul>
+    </div>
+    <ng-view></ng-view>
+</div>
+
+</body>
+<script src="index.js"></script>
+<script src="js/welcome.js"></script>
+<script src="js/daily.js"></script>
+<script src="js/call.js"></script>
+<script src="js/qAdmin.js"></script>
+<script src="js/report_download.js"></script>
+<script src="js/statistic.js"></script>
+<script src="js/stats_download.js"></script>
+<script src="js/uAdmin.js"></script>
+</html>

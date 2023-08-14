@@ -1,0 +1,125 @@
+<h3>Сводная статистика по звонкам</h3>
+<h4>Выберите период для отчета и номер очереди</h4>
+<div>
+    <form ng-submit="searchStats()">
+        <div class="row form-group calendar-field">
+            <label for="from" class="col-sm-1 col-form-label">Дата начала</label>
+            <div class="col-sm-2">
+            <div class="input-group date" id="from">
+                <input type="text" class="form-control" ng-model="statDate.dateFrom">
+                <span class="input-group-append">
+                    <span class="input-group-text bg-white">
+                        <i class="fa fa-calendar"></i>
+                    </span>
+                </span>
+            </div>
+            </div>
+<!--        </div>-->
+<!--        <div class="row form-group calendar-field">-->
+            <label for="to" class="col-sm-1 col-form-label">Дата окончания</label>
+                    <div class="col-sm-2">
+            <div class="input-group date" id="to">
+                <input type="text" class="form-control" ng-model="statDate.dateTo">
+                <span class="input-group-append">
+                    <span class="input-group-text bg-white">
+                        <i class="fa fa-calendar"></i>
+                    </span>
+                </span>
+            </div>
+                    </div>
+            <label for="groupSelector">Номер группы</label>
+                    <div class="col-sm-4">
+            <select class="form-control form-control-sm" ng-model="statDate.queue" id="groupSelector">
+                <option ng-repeat="q in queueList" value="{{q.extension}}">{{q.extension}} - {{q.name}}</option>
+            </select>
+                    </div>
+        </div>
+        <button class="btn btn-outline-primary" type="submit" style="width: 100%">Поиск</button>
+    </form>
+    <div style="height: 10px; margin-bottom: 10px; margin-top: 10px; background-color: cadetblue"></div>
+    <div ng-if="Stats.totalCalls > 0">
+        <h3>Отчет по звонкам в разрезе временных интервалов
+            <button class="btn btn-secondary"
+                    onclick="exportTableToCSV('stat_report.csv', 'report1')">Скачать отчет
+            </button>
+        </h3>
+
+        <table class="report1 table table-hover">
+            <tr style="font-weight: bold">
+                <td>Время</td>
+                <td>Отвечено</td>
+                <td>Пропущено в очереди</td>
+                <td>Пропущено операторами</td>
+                <td>Всего пропущено</td>
+                <td>Всего звонков</td>
+                <td>% отвеченных</td>
+                <td>Среднее время ожидания</td>
+                <td>Среднее время разговора</td>
+            </tr>
+            <tr style="font-weight: bold">
+                <td>Итого:</td>
+                <td>{{Stats.answeredCount}}</td>
+                <td>{{Stats.nonAnsweredByQueueCount}}</td>
+                <td>{{Stats.nonAnsweredByAgentsCount}}</td>
+                <td>{{Stats.totalNonAnsweredCount}}</td>
+                <td>{{Stats.totalCalls}}</td>
+                <td>{{Stats.totalAnsweredByPercent}}</td>
+                <td>{{Stats.waitTimeAVG}}</td>
+                <td>{{Stats.talkTimeAVG}}</td>
+            </tr>
+            <tr ng-repeat="item in Stats.hourStats">
+                <td>{{item.hour}}</td>
+                <td>{{item.answered}}</td>
+                <td>{{item.naQueue}}</td>
+                <td>{{item.naAgent}}</td>
+                <td>{{item.naTotal}}</td>
+                <td>{{item.total}}</td>
+                <td>{{item.answeredPercent}}</td>
+                <td>{{item.waitTimeAVG}}</td>
+                <td>{{item.talkTimeAVG}}</td>
+            </tr>
+        </table>
+        <div style="height: 10px; margin-bottom: 10px; margin-top: 10px; background-color: cadetblue"></div>
+        <h3>Отчет по среднему кол-ву звонков за день
+            <button class="btn btn-secondary" onclick="exportTableToCSV('avg_report.csv', 'report2')">Скачать отчет
+            </button>
+        </h3>
+        <table class="report2 table table-hover">
+            <tr style="font-weight: bold">
+                <td>Время</td>
+                <td>Отвечено</td>
+                <td>Пропущено в очереди</td>
+                <td>Пропущено операторами</td>
+                <td>Всего пропущено</td>
+                <td>Всего звонков</td>
+            </tr>
+            <tr style="font-weight: bold">
+                <td>Итого:</td>
+                <td>{{Stats.answeredCountAVG}}</td>
+                <td>{{Stats.nonAnsweredByQueueCountAVG}}</td>
+                <td>{{Stats.nonAnsweredByAgentsCountAVG}}</td>
+                <td>{{Stats.totalNonAnsweredCountAVG}}</td>
+                <td>{{Stats.totalCallsAVG}}</td>
+            </tr>
+            <tr ng-repeat="item in Stats.hourStats">
+                <td>{{item.hour}}</td>
+                <td>{{item.answeredAVG}}</td>
+                <td>{{item.naQueueAVG}}</td>
+                <td>{{item.naAgentAVG}}</td>
+                <td>{{item.naTotalAVG}}</td>
+                <td>{{item.totalAVG}}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#from').datepicker({
+            format: "yyyy-mm-dd"
+        });
+        $('#to').datepicker({
+            format: "yyyy-mm-dd"
+        });
+    });
+</script>

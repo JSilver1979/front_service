@@ -1,0 +1,156 @@
+<h3>Детализированная статистика ежедневных звонков</h3>
+<h4>Выберите дату для отчета и номер группы</h4>
+<div>
+    <form ng-submit="detailedSearch(0)">
+        <div class="row form-group calendar-field">
+            <label for="calendar">Дата начала</label>
+            <div class="col-sm-2" >
+                <div class="input-group date" id="from">
+                    <input type="text" class="form-control" ng-model="newDate.date" id="calendar">
+                    <span class="input-group-append">
+                <span class="input-group-text bg-white">
+                  <i class="fa fa-calendar"></i>
+                </span>
+              </span>
+                </div>
+            </div>
+            <label for="groupSelector">Номер группы</label>
+            <div class="col-sm-4">
+                <select class="form-control form-control-sm" ng-model="newDate.queue" id="groupSelector">
+                    <option ng-repeat="q in queueList" value="{{q.extension}}">{{q.extension}} - {{q.name}}</option>
+                </select>
+            </div>
+            <label for="sizeSelector">Выводить по:</label>
+            <div class="col-sm-2">
+                <select class="form-control form-control-sm" ng-model="newDate.size" id="sizeSelector"
+                        style="width: 70px;">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
+            <div style="width: 100%; padding-top: 20px">
+                <button class="btn btn-outline-primary" type="submit" style="width: 100%">Поиск</button>
+            </div>
+        </div>
+    </form>
+</div>
+<hr>
+<h4>Применяемые обозначения:</h4>
+<ul style="list-style-type: none">
+    <li><img src="../icons/call_accept_small.png" alt="Accepted"> Звонок принят. В скобках указан номер оператора,
+        принявшего звонок;
+    </li>
+    <li><img src="../icons/call_fwd_small.png" alt="Forwarded >>>"> Звонок был переведен из этой очереди;</li>
+    <li><img src="../icons/call_fwd_small2.png" alt="Forwarded <<<"> Звонок был переведен в эту очередь;</li>
+    <li><img src="../icons/call_warning_small.png" alt="Dropped"> Звонок сброшен в очереди;</li>
+    <li><img src="../icons/call_busy3_small.png" alt="Busy"> Оператор был занят и не смог ответить на звонок;</li>
+    <li><img src="../icons/call_deny_small.png" alt="Agent not answered"> Звонок не принят оператором очереди;</li>
+</ul>
+<hr>
+<h3 ng-if="DetailedCallsList!=null">Отчет по звонкам на дату: {{newDate.date}}. Всего звонков:
+    {{DetailedCallsList.totalElements}}</h3>
+<div ng-if="DetailedCallsList!=null" style="text-align: right">
+    <button ng-if="!DetailedCallsList.pageFirst" ng-click="detailedSearch(newDate.page - 1)"
+            class="btn btn-outline-secondary"> <<<
+    </button>
+    <span ng-repeat="page in [].constructor(DetailedCallsList.totalPages) track by $index">
+        <button ng-if="newDate.page == $index" ng-click="detailedSearch($index)"
+                class="btn btn-secondary">{{$index+1}}</button>
+        <button ng-if="newDate.page != $index" ng-click="detailedSearch($index)" class="btn btn-outline-secondary">{{$index+1}}</button>
+    </span>
+
+    <button ng-if="!DetailedCallsList.pageLast" ng-click="detailedSearch(newDate.page + 1)"
+            class="btn btn-outline-secondary"> >>>
+    </button>
+</div>
+<table class="table table-hover" ng-if="DetailedCallsList!=null">
+    <tr>
+        <td><b>Время звонка</b></td>
+        <td><b>Входящий номер</b></td>
+        <td><b>Статус звонка</b></td>
+        <td><b>Время поступления в очередь</b></td>
+        <td><b>Статус очереди</b></td>
+        <td><b>Время ожидания клиента</b></td>
+        <td><b>Время задержки оператора</b></td>
+        <td><b>Время ответа оператора</b></td>
+        <td><b>Длительность звонка</b></td>
+        <td><b>Аудио запись</b></td>
+        <td><b>Перезвон</b></td>
+    </tr>
+    <tr ng-repeat="item in DetailedCallsList.elements">
+        <td>{{item.callTime}}</td>
+        <td><a target="_blank" href="#!/call/{{item.id}}">{{item.number}}</a></td>
+        <td>
+            <img ng-if="item.callStatus=='ANSWERED' && item.redirected==false" src="../icons/call_accept_small.png"
+                 alt="Accepted">
+            <img ng-if="item.callStatus=='NO ANSWER'" src="../icons/call_warning_small.png" alt="Dropped">
+            <img ng-if="item.callStatus=='NO ANSWERED BY QUEUE'" src="../icons/call_warning_small.png" alt="Dropped">
+            <img ng-if="item.callStatus=='ANSWERED' && item.redirected==true && item.callTime==item.queueTime"
+                 src="../icons/call_fwd_small.png" alt="Forwarded <<<">
+            <img ng-if="item.callStatus=='ANSWERED' && item.redirected==true && item.callTime!=item.queueTime"
+                 src="../icons/call_fwd_small2.png" alt="Forwarded >>>">
+        </td>
+        <td>{{item.queueTime}}</td>
+        <td>
+            <div ng-if="item.queueStatus=='ANSWERED'">
+                <span class="ANSWERED">
+                    <img src="../icons/call_accept_small.png" alt="Accepted">
+                    <b>({{item.agentNumber}})</b>
+                </span>
+            </div>
+            <div ng-if="item.queueStatus=='NO ANSWERED BY OPERATOR'">
+                <span class="NO_ANSWER">
+                    <img src="../icons/call_deny_small.png" alt="Agent not answered">
+                </span>
+            </div>
+            <div ng-if="item.queueStatus=='NO ANSWERED BY QUEUE'">
+                <img src="../icons/call_warning_small.png" alt="Dropped">
+            </div>
+            <div ng-if="item.queueStatus=='BUSY'">
+                <img src="../icons/call_busy3_small.png" alt="Busy">
+            </div>
+        </td>
+        <td>{{item.waitTime}}</td>
+        <td>{{item.agentAnswerDelay}}</td>
+        <td>{{item.answerTime}}</td>
+        <td>{{item.answerDuration}}</td>
+        <td>
+            <div ng-if="item.callStatus=='ANSWERED'">
+                <audio controls>
+                    <source src="http://10.1.5.105:8082/audio/{{item.audioPath}}" type="audio/wav">
+                    <a href="http://10.1.5.105:8082/audio/{{item.audioPath}}">D...</a>
+                </audio>
+            </div>
+        </td>
+        <td>
+            <img ng-if="item.recalled==1" src="../icons/recall_yes.png" alt="YES">
+            <img ng-if="item.recalled==2" src="../icons/recall_almost.png" alt="ALMOST">
+            <img ng-if="item.recalled==3" src="../icons/recall_noneed.png" alt="NO NEED">
+            <img ng-if="item.recalled==0" src="../icons/recall_no.png" alt="NO">
+        </td>
+    </tr>
+</table>
+<div ng-if="DetailedCallsList!=null" style="text-align: right">
+    <button ng-if="!DetailedCallsList.pageFirst" ng-click="detailedSearch(newDate.page - 1)"
+            class="btn btn-outline-secondary"> <<<
+    </button>
+    <span ng-repeat="page in [].constructor(DetailedCallsList.totalPages) track by $index">
+        <button ng-if="newDate.page == $index" ng-click="detailedSearch($index)"
+                class="btn btn-secondary">{{$index+1}}</button>
+        <button ng-if="newDate.page != $index" ng-click="detailedSearch($index)" class="btn btn-outline-secondary">{{$index+1}}</button>
+    </span>
+
+    <button ng-if="!DetailedCallsList.pageLast" ng-click="detailedSearch(newDate.page + 1)"
+            class="btn btn-outline-secondary"> >>>
+    </button>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#from').datepicker({
+            format: "yyyy-mm-dd"
+        });
+    });
+</script>

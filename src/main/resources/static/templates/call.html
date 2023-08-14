@@ -1,0 +1,143 @@
+<h3 style="text-align: center">Детализированная информация по звонку</h3>
+
+<table class="table table-hover">
+  <tr>
+    <td style="text-align: right; font-weight: bold; color: teal">Номер звонившего:</td>
+    <td style="text-align: left; width: 50%">{{ callDetails.number }}</td>
+  </tr>
+  <tr>
+    <td style="text-align: right; font-weight: bold; color: teal">Дата и время звонка:</td>
+    <td style="text-align: left">{{ callDetails.date }} {{ callDetails.callTime }}</td>
+  </tr>
+  <tr>
+    <td style="text-align: right; font-weight: bold; color: teal">Итоговый статус звонка:</td>
+    <td style="text-align: left">
+      <div ng-if="callDetails.callStatus=='ANSWERED'" class="ANSWERED">Звонок принят</div>
+      <div ng-if="callDetails.callStatus=='NO ANSWER' || callDetails.callStatus=='NO ANSWERED BY QUEUE'" class="NO_ANSWER">Звонок не принят</div>
+    </td>
+  </tr>
+  <tr>
+    <td style="text-align: right; font-weight: bold; color: teal">Очередь, принявшая звонок:</td>
+    <td style="text-align: left">{{ callDetails.queueNumber }}</td>
+  </tr>
+  <tr>
+    <td style="text-align: right; font-weight: bold; color: teal">Время прихода звонка в очередь:</td>
+    <td style="text-align: left">{{ callDetails.queueTime }}</td>
+  </tr>
+  <tr>
+    <td style="text-align: right; font-weight: bold; color: teal">Время ожидания ответа клиентом:</td>
+    <td style="text-align: left">{{ callDetails.waitTime }}</td>
+  </tr>
+  <tr>
+    <td style="text-align: right; font-weight: bold; color: teal">Итоговый статус звонка в очереди:</td>
+    <td style="text-align: left">
+      <div ng-if="callDetails.queueStatus=='ANSWERED'" class="ANSWERED">Отвечен</div>
+      <div ng-if="callDetails.queueStatus=='NO ANSWERED BY OPERATOR'" class="NO_ANSWER">Не принят оператором</div>
+      <div ng-if="callDetails.queueStatus=='NO ANSWERED BY QUEUE'" class="HANGUP">Сброшен звонящим до поднятия трубки оператором</div>
+      <div ng-if="callDetails.queueStatus=='BUSY'" class="HANGUP">Не принят по причине: все операторы заняты</div>
+    </td>
+  </tr>
+  <tr ng-if="callDetails.queueStatus=='ANSWERED'">
+    <td style="text-align: right; font-weight: bold; color: teal">Номер оператора, принявшего звонок:</td>
+    <td style="text-align: left">{{ callDetails.agentNumber }}</td>
+  </tr>
+  <tr ng-if="callDetails.queueStatus=='ANSWERED'">
+    <td style="text-align: right; font-weight: bold; color: teal">Время задержки ответа оператором:</td>
+    <td style="text-align: left">{{ callDetails.agentAnswerDelay }}</td>
+  </tr>
+  <tr ng-if="callDetails.queueStatus=='ANSWERED'">
+    <td style="text-align: right; font-weight: bold; color: teal">Время ответа оператора:</td>
+    <td style="text-align: left">{{ callDetails.answerTime }}</td>
+  </tr>
+  <tr ng-if="callDetails.queueStatus=='ANSWERED'">
+    <td style="text-align: right; font-weight: bold; color: teal">Длительность разговора с оператором:</td>
+    <td style="text-align: left">{{ callDetails.answerDuration }}</td>
+  </tr>
+  <tr ng-if="callDetails.callStatus=='ANSWERED'">
+    <td style="text-align: right; font-weight: bold; color: teal">Аудиозапись разговора:</td>
+    <td style="text-align: left">
+      <audio controls>
+        <source src="http://10.1.5.105:8090/reports/audio/{{callDetails.audioPath}}" type="audio/wav">
+        <a href="http://10.1.5.105:8090/reports/audio/{{callDetails.audioPath}}">D...</a>
+      </audio>
+    </td>
+  </tr>
+  <tr ng-if="callDetails.redirected"  style="font-weight: bold; color: coral">
+    <td colspan="2" ng-if="callDetails.callStatus=='ANSWERED' && callDetails.callTime==callDetails.queueTime">Звонок был переведен из этой очереди</td>
+    <td colspan="2" ng-if="callDetails.callStatus=='ANSWERED' && callDetails.callTime!=callDetails.queueTime">Звонок был переведен в эту очередь</td>
+  </tr>
+  <tr>
+    <td style="text-align: right; font-weight: bold; color: teal">Ссылка на историю звонка в АТС</td>
+    <td style="text-align: left"><a target="_blank" href="http://10.1.5.110/admin/config.php?display=cdr&action=cel_show&uid={{callDetails.callId}}">{{callDetails.callId}}</a></td>
+  </tr>
+  <tr>
+    <td colspan="2" ng-if="callDetails.recalled==1" style="font-weight: bold; color: green">Обратный звонок был произведен</td>
+    <!--        <td colspan="2" ng-if="callDetails.recalled==2" style="font-weight: bold; color: orange">Обратный звонок был произведен, но дозвониться не удалось</td>-->
+    <td colspan="2" ng-if="callDetails.recalled==3" style="font-weight: bold; color: green">Клиент перезвонил самостоятельно</td>
+    <td colspan="2" ng-if="callDetails.recalled==0 || callDetails.recalled==2">
+      <button class="btn btn-primary" ng-click="setRecall(1)">Успешный обратный звонок</button>
+      <button class="btn btn-warning" ng-click="setRecall(2)">Не удалось дозвониться</button>
+      <button class="btn btn-outline-primary" ng-click="setRecall(3)">Нет необходимости в обратном звонке</button>
+    </td>
+  </tr>
+</table>
+<div style="height: 10px; margin-bottom: 10px; margin-top: 10px; background-color: cadetblue"></div>
+<h3 style="text-align: center">Звонки с номера {{ callDetails.number }} за {{ callDetails.date }}</h3>
+<table class="table table-hover">
+  <tr>
+    <td>Время звонка</td>
+    <td>Статус звонка</td>
+    <td>Номер очереди</td>
+    <td>Время поступления в очередь</td>
+    <td>Статус очереди</td>
+    <td>Время ожидания клиента</td>
+    <td>Время задержки оператора</td>
+    <td>Время ответа оператора</td>
+    <td>Длительность звонка</td>
+    <td>Обратный звонок</td>
+  </tr>
+  <tr ng-repeat="h in historyList" ng-style="set_color(h.id, callDetails.id)">
+    <td><a href="#!call/{{h.id}}">{{h.callTime}}</a></td>
+    <td>
+      <img ng-if="h.callStatus=='ANSWERED' && h.redirected==false" src="../icons/call_accept_small.png"
+           alt="Accepted">
+      <img ng-if="h.callStatus=='NO ANSWER'" src="../icons/call_warning_small.png" alt="Dropped">
+      <img ng-if="h.callStatus=='NO ANSWERED BY QUEUE'" src="../icons/call_warning_small.png" alt="Dropped">
+      <img ng-if="h.callStatus=='ANSWERED' && h.redirected==true && h.callTime==h.queueTime"
+           src="../icons/call_fwd_small.png" alt="Forwarded <<<">
+      <img ng-if="h.callStatus=='ANSWERED' && h.redirected==true && h.callTime!=h.queueTime"
+           src="../icons/call_fwd_small2.png" alt="Forwarded >>>">
+    </td>
+    <td>{{h.queueNumber}}</td>
+    <td>{{h.queueTime}}</td>
+    <td>
+      <div ng-if="h.queueStatus=='ANSWERED'">
+                <span class="ANSWERED">
+                    <img src="../icons/call_accept_small.png" alt="Accepted">
+                    <b>({{h.agentNumber}})</b>
+                </span>
+      </div>
+      <div ng-if="h.queueStatus=='NO ANSWERED BY OPERATOR'">
+                <span class="NO_ANSWER">
+                    <img src="../icons/call_deny_small.png" alt="Agent not answered">
+                </span>
+      </div>
+      <div ng-if="h.queueStatus=='NO ANSWERED BY QUEUE'">
+        <img src="../icons/call_warning_small.png" alt="Dropped">
+      </div>
+      <div ng-if="h.queueStatus=='BUSY'">
+        <img src="../icons/call_busy3_small.png" alt="Busy">
+      </div>
+    </td>
+    <td>{{h.waitTime}}</td>
+    <td>{{h.agentAnswerDelay}}</td>
+    <td>{{h.answerTime}}</td>
+    <td>{{h.answerDuration}}</td>
+    <td>
+      <img ng-if="h.recalled==1" src="../icons/recall_yes.png" alt="YES">
+      <img ng-if="h.recalled==2" src="../icons/recall_almost.png" alt="ALMOST">
+      <img ng-if="h.recalled==3" src="../icons/recall_noneed.png" alt="NO NEED">
+      <img ng-if="h.recalled==0" src="../icons/recall_no.png" alt="NO">
+    </td>
+  </tr>
+</table>

@@ -1,0 +1,44 @@
+<h3 style="text-align: center">Управление пользовательским доступом</h3>
+<div style="background-color: beige; padding-bottom: 10px; padding-top: 10px; text-align: center">
+  <form ng-submit="addUser()">
+    <label>Имя учетной записи: <input type="text" ng-model="accessUser.login"></label>
+    <label>Группа доступа:
+      <select ng-model="accessUser.roleId">
+        <option ng-repeat="r in rolesList" value="{{r.id}}">{{r.roleDescription}}</option>
+      </select>
+    </label>
+    <button class="btn btn-primary" type="submit">Добавить нового пользователя</button>
+  </form>
+</div>
+<div style="height: 10px; margin-bottom: 10px; margin-top: 10px; background-color: cadetblue"></div>
+<h5 style="text-align: center">Управление пользователями и группами доступа</h5>
+<table class="table table-hover">
+  <tr style="font-weight: bold">
+    <td>Имя пользователя</td>
+    <td>Группы доступа</td>
+    <td>Добавить роль</td>
+    <td>Удалить роль</td>
+    <td>Удалить пользователя</td>
+  </tr>
+  <tr ng-repeat="u in allUsers">
+    <td>{{u.login}}</td>
+    <td>
+      <span ng-repeat="r in u.roles">{{r.roleDescription}}&nbsp;</span>
+    </td>
+
+    <td>
+      <select ng-model="addRoleId" ng-change="addRole(u, addRoleId)">
+        <option ng-repeat="r in getUnusedRoles(u.roles)" value="{{r.id}}">{{r.roleDescription}}</option>
+      </select>
+    </td>
+    <td>
+      <select ng-model="removeRoleId" ng-change="removeRole(u.id, removeRoleId)">
+        <option ng-repeat="r in u.roles" value="{{r.id}}">{{r.roleDescription}}</option>
+      </select>
+    </td>
+    <td>
+      <button class="btn btn-outline-danger" ng-click="deleteUser(u.id)">Удалить {{u.login}}</button>
+    </td>
+  </tr>
+</table>
+<div style="height: 10px; margin-bottom: 10px; margin-top: 10px; background-color: cadetblue"></div>

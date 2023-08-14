@@ -1,0 +1,116 @@
+.ANSWERED {
+    color: darkgreen;
+}
+.NO_ANSWER {
+    color:red;
+}
+.HANGUP {
+    color: orange;
+}
+.BUSY {
+    color: dodgerblue;
+}
+audio::-webkit-media-controls-panel {
+    background-color: cadetblue;
+
+}
+
+audio::-webkit-media-controls-timeline {
+    display: none;
+}
+
+audio {
+    width: 150px;
+    height: 30px;
+}
+td {
+    text-align: center;
+}
+body {
+    background-image: url('icons/bg.jpg');
+    background-size: cover;
+}
+.container {
+    padding-top: 100px;
+    padding-bottom: 20px;
+}
+.login-form {
+    width: 600px;
+    height: 400px;
+    background-color: #ffffff;
+    opacity: 0.95;
+    text-align: center;
+    border-radius: 15px;
+    -moz-border-radius: 15px;
+    border: 1px solid black;
+    padding: 10px;
+    margin: auto;
+}
+.logo {
+    margin-bottom: 10px;
+}
+h3 {
+    color: #1286d2;
+    font-family: 'Monotype Corsiva', fantasy;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    text-align: center;
+}
+h5 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+h4 {
+    text-align: center;
+}
+.view-container {
+    background-color: white;
+    margin-top: 20px;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    max-width: 1300px;
+    opacity: 0.95;
+    border-radius: 15px;
+}
+.app-nav-list {
+    list-style-type: none;
+    margin-top: -10px;
+    margin-left: -10px;
+    margin-right: -10px;
+    padding: 0;
+    overflow: hidden;
+    background-color: #a1b282;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.app-nav-item {
+    float: left;
+    border-right: 1px solid #ffffff;
+}
+.app-nav-item:last-child {
+    border-right: none;
+}
+.app-nav-item a {
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 10px 10px;
+    text-decoration: none;
+}
+.app-nav-item a:hover:not(.active) {
+    background-color: cadetblue;
+}
+.active {
+    background-color: #1286d2;
+}
+.logout {
+    margin-top: 3px;
+    margin-right: 3px;
+}
+.calendar-field {
+    margin-right: 0;
+    margin-left: 0
+}
