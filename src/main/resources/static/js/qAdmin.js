@@ -1,5 +1,6 @@
 angular.module('reportApp').controller('qAdminController', function ($http, $scope, $location) {
-    const serverPath = 'http://localhost:8082/queues';
+    // const serverPath = 'http://localhost:8082/queues';
+    const serverPath = 'http://ac-rj-01:8082/queues';
 
     $scope.addQueue = function () {
         $http.post(serverPath + '/add', $scope.newQueue)

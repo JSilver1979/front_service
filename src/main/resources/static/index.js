@@ -63,7 +63,8 @@
 angular
     .module('reportApp')
     .controller('indexController', function ($rootScope, $scope, $http, $location, $localStorage) {
-        const serverPath = 'http://localhost:8082';
+        // const serverPath = 'http://localhost:8082';
+        const serverPath = 'http://ac-rj-01:8082';
 
         $scope.authenticate = function () {
             $http.post(serverPath + '/auth', $scope.user)

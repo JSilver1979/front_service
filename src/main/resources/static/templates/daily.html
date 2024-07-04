@@ -78,6 +78,7 @@
         <td><b>Длительность звонка</b></td>
         <td><b>Аудио запись</b></td>
         <td><b>Перезвон</b></td>
+        <td ng-if="isListener()"><b>Прослушивание</b></td>
     </tr>
     <tr ng-repeat="item in DetailedCallsList.elements">
         <td>{{item.callTime}}</td>
@@ -119,8 +120,8 @@
         <td>
             <div ng-if="item.callStatus=='ANSWERED'">
                 <audio controls>
-                    <source src="http://10.1.5.105:8082/audio/{{item.audioPath}}" type="audio/wav">
-                    <a href="http://10.1.5.105:8082/audio/{{item.audioPath}}">D...</a>
+                    <source src="http://ac-rj-01:8082/audio/{{item.audioPath}}" type="audio/wav">
+                    <a href="http://ac-rj-01:8082/audio/{{item.audioPath}}">D...</a>
                 </audio>
             </div>
         </td>
@@ -129,6 +130,14 @@
             <img ng-if="item.recalled==2" src="../icons/recall_almost.png" alt="ALMOST">
             <img ng-if="item.recalled==3" src="../icons/recall_noneed.png" alt="NO NEED">
             <img ng-if="item.recalled==0" src="../icons/recall_no.png" alt="NO">
+        </td>
+        <td ng-if="isListener() && item.lstatus == null">
+            <img ng-click="setLStatus(item.id, 1)" src="../icons/green_check_btn.png" class="img-link" style="border: 1px solid black">&nbsp;&nbsp;&nbsp;
+            <img ng-click="setLStatus(item.id, 2)" src="../icons/gold_check_btn.png" style="border: 1px solid black;" class="img-link">
+        </td>
+        <td ng-if="isListener() && item.lstatus != null">
+            <img ng-if="item.lstatus == 'Корректно'" src="../icons/green_check.png">
+            <img ng-if="item.lstatus == 'Проработано'" src="../icons/gold_check.png">
         </td>
     </tr>
 </table>

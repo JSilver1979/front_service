@@ -1,10 +1,13 @@
 angular.module('reportApp').controller('downloadController', function ($http, $scope) {
-    const mainPort = ':8082';
-    const queuePort = ':8099';
-    const serverPath = 'http://localhost';
+    // const mainPort = ':8082';
+    // const queuePort = ':8099';
+    // const serverPath = 'http://localhost';
+    const reportPath = 'http://ac-rj-01:8082';
+    const queuePath = 'http://ac-rj-01:8099';
 
     $scope.downloadReport = function () {
-        $http.post(serverPath + mainPort + '/download', $scope.dlPeriod)
+        // $http.post(serverPath + mainPort + '/download', $scope.dlPeriod)
+        $http.post(reportPath + '/download', $scope.dlPeriod)
             .then (function successCallback(response) {
                 let file = new Blob([response.data], {type: 'text/csv'});
                 let url = window.URL || window.webkitURL;
@@ -24,7 +27,8 @@ angular.module('reportApp').controller('downloadController', function ($http, $s
     };
 
     $scope.loadQueues = function () {
-        $http.get(serverPath + queuePort + '/queues')
+        // $http.get(serverPath + queuePort + '/queues')
+        $http.get(queuePath + '/queues')
             .then(function successCallback(response) {
                 $scope.queueList = response.data;
             }, function failureCallback(response) {

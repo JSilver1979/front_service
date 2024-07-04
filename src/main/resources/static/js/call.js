@@ -1,5 +1,6 @@
 angular.module('reportApp').controller('callDisplayController', function ($scope, $routeParams, $http) {
-    const serverPath = 'http://localhost:8082/report';
+    // const serverPath = 'http://localhost:8082/report';
+    const serverPath = 'http://ac-rj-01:8082/report';
 
     $scope.loadCall = function () {
         $http.get(serverPath + '/call/' + $routeParams.eventId)

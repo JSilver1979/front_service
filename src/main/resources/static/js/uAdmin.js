@@ -1,5 +1,6 @@
 angular.module('reportApp').controller('uAdminController', function ($http, $scope, $location) {
-    const serverPath = 'http://localhost:8082/access';
+    // const serverPath = 'http://localhost:8082/access';
+    const serverPath = 'http://ac-rj-01:8082/access';
 
     $scope.addUser = function () {
         $http.post(serverPath + '/add', $scope.accessUser)

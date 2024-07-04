@@ -57,8 +57,10 @@
     <td style="text-align: right; font-weight: bold; color: teal">Аудиозапись разговора:</td>
     <td style="text-align: left">
       <audio controls>
-        <source src="http://10.1.5.105:8090/reports/audio/{{callDetails.audioPath}}" type="audio/wav">
-        <a href="http://10.1.5.105:8090/reports/audio/{{callDetails.audioPath}}">D...</a>
+<!--        <source src="http://10.1.5.105:8090/reports/audio/{{callDetails.audioPath}}" type="audio/wav">-->
+<!--        <a href="http://10.1.5.105:8090/reports/audio/{{callDetails.audioPath}}">D...</a>-->
+        <source src="http://ac-rj-01:8082/audio/{{callDetails.audioPath}}" type="audio/wav">
+        <a href="http://ac-rj-01:8082/audio/{{callDetails.audioPath}}">D...</a>
       </audio>
     </td>
   </tr>
