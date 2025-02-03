@@ -2,7 +2,7 @@ angular.module('reportApp').controller('dailyController', function ($http, $scop
     // const serverPath = 'http://localhost';
 
     $scope.isListener = function () {
-        if ($localStorage.appUser.username == 'kukolevdn') {
+        if ($localStorage.appUser.username.toLowerCase() === 'pachkoriyaao') {
             return true;
         } else {
             return false;
